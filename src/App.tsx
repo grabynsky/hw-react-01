@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {FC, useEffect, useState} from 'react';
+import ProductComponent from "./components/product/ProductComponent";
+import IProduct from './model/IProduct';
 
-function App() {
+
+
+const  App: FC = () => {
+
+    const [products, setProducts] = useState<IProduct[]>([]);
+
+
+    useEffect(()=>{
+        fetch('https://dummyjson.com/products')
+            .then(value => value.json())
+            .then(value => {
+            setProducts(value.products);
+
+            })
+    }, []);
+    console.log(products.length)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+        {
+            products.map(({id, title, description,price, rating }) =>
+                <ProductComponent
+                    key = {id}
+                    id = {id}
+                    title={title}
+                    description={description}
+                    price={price}
+                    rating={rating}
+                />
+            )
+        }
+    </>
   );
 }
 
